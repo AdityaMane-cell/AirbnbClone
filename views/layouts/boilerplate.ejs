@@ -24,13 +24,24 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
       rel="stylesheet"
     />
+
+    <!-- rating -->
+    <link rel="stylesheet" href="/css/rating.css" />
+
+    <!-- map -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <!-- Leaflet JS via CDN -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
   </head>
   <body>
     <%- include("../includes/navbar.ejs"); %>
 
     <div class="container">
-      <%- include("../includes/flash.ejs"); %> 
-      <%- body %>
+      <%- include("../includes/flash.ejs"); %> <%- body %>
     </div>
 
     <%- include("../includes/footer.ejs"); %>

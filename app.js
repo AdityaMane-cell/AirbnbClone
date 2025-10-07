@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config();
+}
+// console.log(process.env.SECRET);
+
 // imports
 const express = require("express");
 const app = express();
@@ -38,11 +43,6 @@ async function main() {
   await mongoose.connect(MONGO_URL);
 }
 
-app.get("/", (req, res) => {
-  console.log("(Root)Status: working.....");
-  res.send("Server Online");
-});
-
 // session
 const sessionOptions = {
   secret: "mysupersecretcode",
@@ -70,9 +70,10 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  // console.log("success" + res.locals.success);
-  // console.log("error" + res.locals.error);
-  res.locals.currUser = req.user;
+
+  // res.locals.redirectUrl = req.session.redirectUrl || null; // global middleware to pass redirect url
+  res.locals.currUser = req.user; // to be able to access currUser in every route
+  res.locals.mapToken = process.env.MAP_API_KEY; // pass map DEFAULT KEY to every route
   next();
 });
 

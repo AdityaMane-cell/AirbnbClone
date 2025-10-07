@@ -1,6 +1,8 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/"><i class="fa-solid fa-compass"></i></a>
+    <a class="navbar-brand" href="/listings"
+      ><i class="fa-solid fa-compass"></i
+    ></a>
     <button
       class="navbar-toggler"
       type="button"
@@ -11,17 +13,21 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="/listings/new">Add new Listings</a>
+        <a class="nav-link" href="/listings">Explore</a>
       </div>
 
       <div class="navbar-nav ms-auto">
-        <% if(!currUser) { %>
-        <a class="btn btn-danger" href="/signup">Sign up</a> &nbsp;&nbsp;&nbsp;
-        <a class="btn btn-danger" href="/login">Log in</a>
+        <a class="btn btn-outline-primary" href="/listings/new"
+          >Airbnb your home</a
+        >
+        &nbsp;&nbsp;&nbsp; <% if(!currUser) { %>
+        <a class="btn btn-danger" href="/signup"><b>Sign up</b></a>
+        &nbsp;&nbsp;&nbsp;
+        <a class="btn btn-danger" href="/login"><b>Log in</b></a>
         <% } %> <% if(currUser) { %>
-        <a class="btn btn-danger" href="/logout">Log out</a>
+        <div class="btn btn-primary"><%= currUser.username %></div>
+        &nbsp;&nbsp;&nbsp;
+        <a class="btn btn-danger" href="/logout"><b>Log out</b></a>
         <% } %>
       </div>
     </div>

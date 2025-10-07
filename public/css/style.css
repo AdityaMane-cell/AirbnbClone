@@ -1,3 +1,9 @@
+/* In /public/css/style.css or inline in boilerplate.ejs */
+#map {
+  height: 400px; /* Adjust as needed */
+  width: 80vh;
+}
+
 body {
   font-family: "Plus Jakarta Sans", sans-serif !important;
   display: flex;
