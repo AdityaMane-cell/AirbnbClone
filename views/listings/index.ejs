@@ -1,10 +1,19 @@
 <% layout("/layouts/boilerplate.ejs"); %>
 
 <style>
+  .filter-bar {
+    display: flex;
+    align-items: center; /* Vertically center items */
+    justify-content: space-between; /* Push toggle to the right */
+    min-width: 0; /* Prevent overflow issues */
+    margin-bottom: 1rem;
+  }
+
   #filters-container {
     position: relative;
     overflow: hidden; /* Hide overflow for clean edges */
-    margin-bottom: 1rem;
+    flex-grow: 1; /* Take available space */
+    min-width: 0; /* Allow shrinking */
   }
 
   #filters {
@@ -28,6 +37,7 @@
     flex: 0 0 auto; /* Fixed width per filter */
     width: 80px; /* Adjust for ~4-6 visible on desktop */
     cursor: pointer;
+    padding: 0.5rem 0; /* Add padding for consistency */
   }
 
   .filter:hover {
@@ -37,13 +47,7 @@
 
   .filter i {
     font-size: 1.5rem;
-    background: linear-gradient(
-      135deg,
-      #f6d365 0%,
-      #fda085 100%
-    ); /* Fancy gradient background */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: black; /* Changed to black as requested */
     display: block;
   }
 
@@ -53,6 +57,39 @@
     color: #333;
   }
 
+  /* Tax toggle styling outside slider */
+  .tax-toggle {
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-left: 1rem; /* Space from filters */
+    opacity: 0.7;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    white-space: nowrap; /* Prevent text wrapping */
+    width: 180px; /* Increased width to prevent overlap */
+  }
+
+  .tax-toggle:hover {
+    opacity: 1;
+    transform: scale(1.05); /* Subtle zoom */
+  }
+
+  .tax-toggle .form-check-reverse {
+    display: flex;
+    justify-content: flex-start; /* Align items to start */
+    align-items: center;
+    gap: 1rem; /* Increased gap to separate switch and text */
+  }
+
+  .tax-toggle .form-check-label {
+    font-size: 0.8rem;
+    color: #333;
+    white-space: nowrap; /* Prevent wrapping */
+    max-width: 120px; /* Limit text width to avoid overlap */
+    overflow: hidden; /* Hide overflow if too long */
+    text-overflow: ellipsis; /* Add ellipsis if truncated */
+  }
+
   /* Gradient edges to indicate more content */
   #filters-container::before,
   #filters-container::after {
@@ -60,7 +97,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 50px; /* Gradient width */
+    width: 50px;
     z-index: 1;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -69,7 +106,7 @@
   #filters-container::before {
     left: 0;
     background: linear-gradient(to right, white, transparent);
-    opacity: 0; /* Hidden by default */
+    opacity: 0;
   }
 
   #filters-container::after {
@@ -78,7 +115,6 @@
     opacity: 0;
   }
 
-  /* Show gradients when scrollable */
   #filters-container.scrollable-left::before,
   #filters-container.scrollable-right::after {
     opacity: 1;
@@ -107,117 +143,141 @@
   }
 
   #filters-container:hover .scroll-arrow {
-    opacity: 1; /* Show arrows on container hover */
+    opacity: 1;
   }
 
-  /* Tax toggle styling */
-  .tax-toggle {
-    margin-left: auto; /* Align to right */
-    margin-top: 1rem;
-    white-space: nowrap; /* Prevent wrapping */
-  }
-
-  /* Responsiveness with media queries */
+  /* Responsiveness */
   @media (max-width: 768px) {
+    .filter-bar {
+      flex-direction: column; /* Stack on mobile */
+      align-items: flex-start; /* Align to left */
+    }
+
+    #filters-container {
+      width: 100%; /* Full width on mobile */
+      margin-bottom: 0.5rem; /* Space before toggle */
+    }
+
+    .tax-toggle {
+      margin-left: 0; /* Remove margin on mobile */
+      width: 160px; /* Adjust for mobile */
+    }
+
+    .tax-toggle .form-check-reverse {
+      gap: 0.5rem; /* Reduce gap on mobile */
+    }
+
+    .tax-toggle .form-check-label {
+      max-width: 100px; /* Adjust text width on mobile */
+    }
+
     .filter {
-      width: 60px; /* Smaller on mobile, show ~2-3 at a time */
+      width: 60px; /* Smaller on mobile */
       margin-right: 0.5rem;
     }
 
     #filters-container::before,
     #filters-container::after {
-      width: 30px; /* Smaller gradients on mobile */
+      width: 30px;
     }
   }
 
   @media (min-width: 992px) {
     .filter {
-      width: 100px; /* Larger on desktop */
+      width: 100px;
+    }
+
+    .tax-toggle {
+      width: 200px; /* Larger on desktop */
+    }
+
+    .tax-toggle .form-check-label {
+      max-width: 140px; /* Adjust for desktop */
     }
   }
 </style>
 
-<div id="filters-container">
-  <div id="filters">
-    <div class="filter">
-      <i class="fa-solid fa-fire"></i>
-      <p>Trending</p>
+<div class="filter-bar">
+  <div id="filters-container">
+    <div id="filters">
+      <div class="filter">
+        <i class="fa-solid fa-fire"></i>
+        <p>Trending</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-bed"></i>
+        <p>Room</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-mountain-city"></i>
+        <p>Iconic cities</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-cloud-showers-water"></i>
+        <p>Surfing</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-chess-rook"></i>
+        <p>Castles</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-person-swimming"></i>
+        <p>Amazing pools</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-umbrella-beach"></i>
+        <p>Beach</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-house-chimney"></i>
+        <p>Cabins</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-spaghetti-monster-flying"></i>
+        <p>OMG!</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-water"></i>
+        <p>LakeFront</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-mountain"></i>
+        <p>Mountain</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-campground"></i>
+        <p>Camping</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-cow"></i>
+        <p>Farms</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-snowflake"></i>
+        <p>Arctic</p>
+      </div>
     </div>
-    <div class="filter">
-      <i class="fa-solid fa-bed"></i>
-      <p>Room</p>
+
+    <!-- Scroll arrows -->
+    <div class="scroll-arrow left" onclick="scrollFilters(-200)">
+      <i class="fa-solid fa-chevron-left"></i>
     </div>
-    <div class="filter">
-      <i class="fa-solid fa-mountain-city"></i>
-      <p>Iconic cities</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-cloud-showers-water"></i>
-      <p>Surfing</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-chess-rook"></i>
-      <p>Castles</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-person-swimming"></i>
-      <p>Amazing pools</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-umbrella-beach"></i>
-      <p>Beach</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-house-chimney"></i>
-      <p>Cabins</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-spaghetti-monster-flying"></i>
-      <p>OMG!</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-water"></i>
-      <p>LakeFront</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-mountain"></i>
-      <p>Mountain</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-campground"></i>
-      <p>Camping</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-cow"></i>
-      <p>Farms</p>
-    </div>
-    <div class="filter">
-      <i class="fa-solid fa-snowflake"></i>
-      <p>Arctic</p>
+    <div class="scroll-arrow right" onclick="scrollFilters(200)">
+      <i class="fa-solid fa-chevron-right"></i>
     </div>
   </div>
 
-  <!-- Scroll arrows -->
-  <div class="scroll-arrow left" onclick="scrollFilters(-200)">
-    <i class="fa-solid fa-chevron-left"></i>
-  </div>
-  <div class="scroll-arrow right" onclick="scrollFilters(200)">
-    <i class="fa-solid fa-chevron-right"></i>
-  </div>
-</div>
-
-<!-- Tax toggle (outside slider for easy access) -->
-<div class="tax-toggle">
-  <div class="form-check-reverse form-switch">
-    <input
-      class="form-check-input"
-      type="checkbox"
-      role="switch"
-      id="taxSwitch"
-    />
-    <label class="form-check-label" for="taxSwitch"
-      >Display total after taxes</label
-    >
+  <!-- Tax toggle outside slider but in same line -->
+  <div class="tax-toggle">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        role="switch"
+        id="taxSwitch"
+      />
+      <label class="form-check-label" for="taxSwitch">Apply taxes</label>
+    </div>
   </div>
 </div>
 
@@ -271,7 +331,7 @@
     }
   });
 
-  // Auto-scroll on hover near edges (fancy feature)
+  // Auto-scroll on hover near edges
   let scrollInterval;
   container.addEventListener("mousemove", (e) => {
     const rect = container.getBoundingClientRect();
@@ -279,10 +339,8 @@
     clearInterval(scrollInterval);
 
     if (e.clientX - rect.left < edgeSize) {
-      // Hover left edge: scroll left
-      scrollInterval = setInterval(() => scrollFilters(-10), 20); // Smooth scroll
+      scrollInterval = setInterval(() => scrollFilters(-10), 20);
     } else if (rect.right - e.clientX < edgeSize) {
-      // Hover right edge: scroll right
       scrollInterval = setInterval(() => scrollFilters(10), 20);
     }
   });
