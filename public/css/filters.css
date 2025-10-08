@@ -1,0 +1,250 @@
+/* === FILTER BAR STYLING === */
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  margin-bottom: 1rem;
+}
+
+/* Wrapper containing arrows + filters */
+#filters-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+#filters-container {
+  position: relative;
+  overflow: hidden;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+#filters {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0 2rem; /* Add space for arrows to avoid overlap */
+}
+
+#filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filter {
+  position: relative;
+  background-color: transparent;
+  margin-right: 0.6rem;
+  opacity: 0.5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  flex: 0 0 auto;
+  width: 80px;
+  cursor: pointer;
+  padding: 0.5rem 0;
+
+  /* Center content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.filter.active {
+  opacity: 1 !important;
+  transform: scale(1.1);
+  border-bottom: none; /* Removed to avoid double borders */
+}
+
+/* Properly centered and scaled bottom underline */
+.filter.active::after {
+  content: "";
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: black;
+  border-radius: 2px;
+  transform: scaleX(0.6); /* Keep it centered and shorter */
+  transform-origin: center;
+  transition: transform 0.3s ease;
+  border-bottom: 1px solid rgb(80, 42, 42);
+}
+
+.filter:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.filter i {
+  font-size: 1.5rem;
+  color: rgb(199, 23, 23);
+  display: block;
+}
+
+.filter p {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  color: #333;
+  white-space: nowrap;
+}
+
+/* Tax info toggle (hidden text beside price) */
+.tax-info {
+  display: none;
+}
+
+/* Tax toggle switch */
+.tax-toggle {
+  display: inline-flex;
+  margin-left: 1rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 1.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  flex-shrink: 0;
+  white-space: nowrap;
+  width: 180px;
+}
+
+.tax-toggle:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.tax-toggle .form-check-label {
+  font-size: 1rem;
+  color: #333;
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Gradient indicators to show scroll overflow */
+#filters-container::before,
+#filters-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#filters-container::before {
+  left: 0;
+  background: linear-gradient(to right, white, transparent);
+  opacity: 0;
+}
+
+#filters-container::after {
+  right: 0;
+  background: linear-gradient(to left, white, transparent);
+  opacity: 0;
+}
+
+#filters-container.scrollable-left::before,
+#filters-container.scrollable-right::after {
+  opacity: 1;
+}
+
+/* Arrows for scrolling */
+.scroll-arrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  z-index: 3;
+}
+
+.scroll-arrow:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.scroll-arrow.left {
+  left: 10px;
+}
+
+.scroll-arrow.right {
+  right: 10px;
+}
+
+#filters-container:hover .scroll-arrow {
+  opacity: 1;
+}
+
+/* === RESPONSIVE BREAKPOINTS === */
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #filters-container {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .tax-toggle {
+    margin-left: 0;
+    width: 160px;
+  }
+
+  .tax-toggle .form-check-reverse {
+    gap: 0.5rem;
+  }
+
+  .tax-toggle .form-check-label {
+    max-width: 100px;
+  }
+
+  .filter {
+    width: 60px;
+    margin-right: 0.5rem;
+  }
+
+  #filters-container::before,
+  #filters-container::after {
+    width: 30px;
+  }
+}
+
+@media (min-width: 992px) {
+  .filter {
+    width: 100px;
+  }
+
+  .tax-toggle {
+    width: 200px;
+  }
+
+  .tax-toggle .form-check-label {
+    max-width: 140px;
+  }
+}

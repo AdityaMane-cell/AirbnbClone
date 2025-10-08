@@ -1,290 +1,114 @@
 <% layout("/layouts/boilerplate.ejs"); %>
 
-<style>
-  .filter-bar {
-    display: flex;
-    align-items: center; /* Vertically center items */
-    justify-content: space-between; /* Push toggle to the right */
-    min-width: 0; /* Prevent overflow issues */
-    margin-bottom: 1rem;
-  }
-
-  #filters-container {
-    position: relative;
-    overflow: hidden; /* Hide overflow for clean edges */
-    flex-grow: 1; /* Take available space */
-    min-width: 0; /* Allow shrinking */
-  }
-
-  #filters {
-    display: flex;
-    flex-wrap: nowrap; /* No wrapping for horizontal scroll */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    scroll-behavior: smooth; /* Smooth scrolling */
-    scrollbar-width: none; /* Hide scrollbar in Firefox */
-    -ms-overflow-style: none; /* Hide scrollbar in IE/Edge */
-  }
-
-  #filters::-webkit-scrollbar {
-    display: none; /* Hide scrollbar in Chrome/Safari */
-  }
-
-  .filter {
-    text-align: center;
-    margin: 0 1rem 0 0; /* Spacing between filters */
-    opacity: 0.7;
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Fancy hover animation */
-    flex: 0 0 auto; /* Fixed width per filter */
-    width: 80px; /* Adjust for ~4-6 visible on desktop */
-    cursor: pointer;
-    padding: 0.5rem 0; /* Add padding for consistency */
-  }
-
-  .filter:hover {
-    opacity: 1;
-    transform: scale(1.1); /* Slight zoom on hover */
-  }
-
-  .filter i {
-    font-size: 1.5rem;
-    color: black; /* Changed to black as requested */
-    display: block;
-  }
-
-  .filter p {
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-    color: #333;
-  }
-
-  /* Tax toggle styling outside slider */
-  .tax-toggle {
-    flex-shrink: 0; /* Prevent shrinking */
-    margin-left: 1rem; /* Space from filters */
-    opacity: 0.7;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    padding: 0.5rem 0;
-    cursor: pointer;
-    white-space: nowrap; /* Prevent text wrapping */
-    width: 180px; /* Increased width to prevent overlap */
-  }
-
-  .tax-toggle:hover {
-    opacity: 1;
-    transform: scale(1.05); /* Subtle zoom */
-  }
-
-  .tax-toggle .form-check-reverse {
-    display: flex;
-    justify-content: flex-start; /* Align items to start */
-    align-items: center;
-    gap: 1rem; /* Increased gap to separate switch and text */
-  }
-
-  .tax-toggle .form-check-label {
-    font-size: 0.8rem;
-    color: #333;
-    white-space: nowrap; /* Prevent wrapping */
-    max-width: 120px; /* Limit text width to avoid overlap */
-    overflow: hidden; /* Hide overflow if too long */
-    text-overflow: ellipsis; /* Add ellipsis if truncated */
-  }
-
-  /* Gradient edges to indicate more content */
-  #filters-container::before,
-  #filters-container::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 50px;
-    z-index: 1;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-
-  #filters-container::before {
-    left: 0;
-    background: linear-gradient(to right, white, transparent);
-    opacity: 0;
-  }
-
-  #filters-container::after {
-    right: 0;
-    background: linear-gradient(to left, white, transparent);
-    opacity: 0;
-  }
-
-  #filters-container.scrollable-left::before,
-  #filters-container.scrollable-right::after {
-    opacity: 1;
-  }
-
-  /* Arrows (appear on hover) */
-  .scroll-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 50%;
-    padding: 0.5rem;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-  }
-
-  .scroll-arrow.left {
-    left: 10px;
-  }
-
-  .scroll-arrow.right {
-    right: 10px;
-  }
-
-  #filters-container:hover .scroll-arrow {
-    opacity: 1;
-  }
-
-  /* Responsiveness */
-  @media (max-width: 768px) {
-    .filter-bar {
-      flex-direction: column; /* Stack on mobile */
-      align-items: flex-start; /* Align to left */
-    }
-
-    #filters-container {
-      width: 100%; /* Full width on mobile */
-      margin-bottom: 0.5rem; /* Space before toggle */
-    }
-
-    .tax-toggle {
-      margin-left: 0; /* Remove margin on mobile */
-      width: 160px; /* Adjust for mobile */
-    }
-
-    .tax-toggle .form-check-reverse {
-      gap: 0.5rem; /* Reduce gap on mobile */
-    }
-
-    .tax-toggle .form-check-label {
-      max-width: 100px; /* Adjust text width on mobile */
-    }
-
-    .filter {
-      width: 60px; /* Smaller on mobile */
-      margin-right: 0.5rem;
-    }
-
-    #filters-container::before,
-    #filters-container::after {
-      width: 30px;
-    }
-  }
-
-  @media (min-width: 992px) {
-    .filter {
-      width: 100px;
-    }
-
-    .tax-toggle {
-      width: 200px; /* Larger on desktop */
-    }
-
-    .tax-toggle .form-check-label {
-      max-width: 140px; /* Adjust for desktop */
-    }
-  }
-</style>
-
+<!-- Main filter bar -->
 <div class="filter-bar">
-  <div id="filters-container">
-    <div id="filters">
-      <div class="filter">
-        <i class="fa-solid fa-fire"></i>
-        <p>Trending</p>
+  <!-- Filters and arrows -->
+  <div id="filters-wrapper">
+    <div id="filters-container">
+      <div id="filters">
+        <!-- Individual filter buttons -->
+        <div class="filter" role="button" tabindex="0" aria-label="Trending">
+          <i class="fa-solid fa-fire" aria-hidden="true"></i>
+          <p>Trending</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="Room">
+          <i class="fa-solid fa-bed" aria-hidden="true"></i>
+          <p>Room</p>
+        </div>
+        <div
+          class="filter"
+          role="button"
+          tabindex="0"
+          aria-label="Iconic cities"
+        >
+          <i class="fa-solid fa-mountain-city" aria-hidden="true"></i>
+          <p>Iconic cities</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="Surfing">
+          <i class="fa-solid fa-cloud-showers-water" aria-hidden="true"></i>
+          <p>Surfing</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="Castles">
+          <i class="fa-solid fa-chess-rook" aria-hidden="true"></i>
+          <p>Castles</p>
+        </div>
+        <div
+          class="filter"
+          role="button"
+          tabindex="0"
+          aria-label="Amazing pools"
+        >
+          <i class="fa-solid fa-person-swimming" aria-hidden="true"></i>
+          <p>Amazing pools</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="Beach">
+          <i class="fa-solid fa-umbrella-beach" aria-hidden="true"></i>
+          <p>Beach</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="Cabins">
+          <i class="fa-solid fa-house-chimney" aria-hidden="true"></i>
+          <p>Cabins</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="OMG">
+          <i
+            class="fa-solid fa-spaghetti-monster-flying"
+            aria-hidden="true"
+          ></i>
+          <p>OMG!</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="LakeFront">
+          <i class="fa-solid fa-water" aria-hidden="true"></i>
+          <p>LakeFront</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="Mountain">
+          <i class="fa-solid fa-mountain" aria-hidden="true"></i>
+          <p>Mountain</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="Camping">
+          <i class="fa-solid fa-campground" aria-hidden="true"></i>
+          <p>Camping</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="Farms">
+          <i class="fa-solid fa-cow" aria-hidden="true"></i>
+          <p>Farms</p>
+        </div>
+        <div class="filter" role="button" tabindex="0" aria-label="Arctic">
+          <i class="fa-solid fa-snowflake" aria-hidden="true"></i>
+          <p>Arctic</p>
+        </div>
       </div>
-      <div class="filter">
-        <i class="fa-solid fa-bed"></i>
-        <p>Room</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-mountain-city"></i>
-        <p>Iconic cities</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-cloud-showers-water"></i>
-        <p>Surfing</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-chess-rook"></i>
-        <p>Castles</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-person-swimming"></i>
-        <p>Amazing pools</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-umbrella-beach"></i>
-        <p>Beach</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-house-chimney"></i>
-        <p>Cabins</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-spaghetti-monster-flying"></i>
-        <p>OMG!</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-water"></i>
-        <p>LakeFront</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-mountain"></i>
-        <p>Mountain</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-campground"></i>
-        <p>Camping</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-cow"></i>
-        <p>Farms</p>
-      </div>
-      <div class="filter">
-        <i class="fa-solid fa-snowflake"></i>
-        <p>Arctic</p>
-      </div>
-    </div>
 
-    <!-- Scroll arrows -->
-    <div class="scroll-arrow left" onclick="scrollFilters(-200)">
-      <i class="fa-solid fa-chevron-left"></i>
-    </div>
-    <div class="scroll-arrow right" onclick="scrollFilters(200)">
-      <i class="fa-solid fa-chevron-right"></i>
+      <!-- Left Scroll Arrow -->
+      <div class="scroll-arrow left" onclick="scrollFilters(-200)">
+        <i class="fa-solid fa-chevron-left"></i>
+      </div>
+
+      <!-- Right Scroll Arrow -->
+      <div class="scroll-arrow right" onclick="scrollFilters(200)">
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
     </div>
   </div>
 
-  <!-- Tax toggle outside slider but in same line -->
+  <!-- Tax Toggle -->
   <div class="tax-toggle">
-    <div class="form-check form-switch">
+    <div class="form-check-reverse form-switch">
       <input
         class="form-check-input"
         type="checkbox"
         role="switch"
         id="taxSwitch"
       />
-      <label class="form-check-label" for="taxSwitch">Apply taxes</label>
+      <label class="form-check-label" for="taxSwitch">Show taxes</label>
     </div>
   </div>
 </div>
 
+<!-- Listings -->
 <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
   <% for(let listing of allListings) { %>
-  <a href="/listings/<%=listing._id%>" style="text-decoration: none">
-    <div class="card listing-card" style="width: 20rem">
+  <a href="/listings/<%= listing._id %>" style="text-decoration: none">
+    <div class="card listing-card h-100">
       <img
         src="<%= listing.image.url %>"
         class="card-img-top"
@@ -294,58 +118,12 @@
       <div class="card-img-overlay"></div>
       <div class="card-body">
         <p class="card-text">
-          <%=listing.title %><br />
-          &#8377; <%= listing.price.toLocaleString("en-IN") %> / night <br />
+          <%= listing.title %><br />
+          &#8377; <%= listing.price.toLocaleString("en-IN") %> / night
+          <i class="tax-info">&nbsp;&nbsp;+18% GST</i>
         </p>
       </div>
     </div>
   </a>
   <% } %>
 </div>
-
-<script>
-  let taxSwitch = document.getElementById("taxSwitch");
-  taxSwitch.addEventListener("click", () => {
-    console.log("toggle switch clicked...");
-  });
-
-  // Function to scroll filters
-  function scrollFilters(amount) {
-    const filters = document.getElementById("filters");
-    filters.scrollLeft += amount;
-  }
-
-  // Show/hide gradients based on scroll position
-  const container = document.getElementById("filters-container");
-  const filters = document.getElementById("filters");
-  filters.addEventListener("scroll", () => {
-    if (filters.scrollLeft > 0) {
-      container.classList.add("scrollable-left");
-    } else {
-      container.classList.remove("scrollable-left");
-    }
-    if (filters.scrollLeft < filters.scrollWidth - filters.clientWidth) {
-      container.classList.add("scrollable-right");
-    } else {
-      container.classList.remove("scrollable-right");
-    }
-  });
-
-  // Auto-scroll on hover near edges
-  let scrollInterval;
-  container.addEventListener("mousemove", (e) => {
-    const rect = container.getBoundingClientRect();
-    const edgeSize = 50; // Pixels from edge to trigger scroll
-    clearInterval(scrollInterval);
-
-    if (e.clientX - rect.left < edgeSize) {
-      scrollInterval = setInterval(() => scrollFilters(-10), 20);
-    } else if (rect.right - e.clientX < edgeSize) {
-      scrollInterval = setInterval(() => scrollFilters(10), 20);
-    }
-  });
-
-  container.addEventListener("mouseleave", () => {
-    clearInterval(scrollInterval);
-  });
-</script>
