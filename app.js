@@ -102,6 +102,10 @@ app.use("/", userRouter);
 //   next(new ExpressError(404, "Page not Found"));
 // });
 
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
+
 app.use((err, req, res, next) => {
   console.log("inside error");
   let { statusCode = 500, message = "Something Went Wrong" } = err;
