@@ -13,10 +13,11 @@ cloudinary.config({
 });
 
 // ✅ MongoDB connection
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const dburl = process.env.ATLASDB_URL;
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dburl); // initializing data to cloud storage
 }
 
 main()
@@ -40,9 +41,12 @@ const initDB = async () => {
     // ✅ Upload images to Cloudinary and prepare new listing data
     const listingsWithOwner = await Promise.all(
       initData.data.map(async (obj) => {
-        const uploadedResponse = await cloudinary.uploader.upload(obj.image.url, {
-          folder: "Wanderlust",
-        });
+        const uploadedResponse = await cloudinary.uploader.upload(
+          obj.image.url,
+          {
+            folder: "Wanderlust",
+          }
+        );
 
         return {
           ...obj,
@@ -50,7 +54,7 @@ const initDB = async () => {
             url: uploadedResponse.secure_url,
             filename: uploadedResponse.public_id,
           },
-          owner: "68d53db5884b9d586461e574", // admin user ID
+          owner: "68e7b61caf72085eff77a426", // admin user ID from atlas
         };
       })
     );
